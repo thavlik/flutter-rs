@@ -195,7 +195,7 @@ impl FlutterWindow {
                     match event {
                         WindowEvent::CloseRequested => *control_flow = ControlFlow::Exit,
                         WindowEvent::Resized(_) => resize(&engine, &context),
-                        WindowEvent::HiDpiFactorChanged(_) => resize(&engine, &context),
+                        //WindowEvent::HiDpiFactorChanged(_) => resize(&engine, &context),
                         WindowEvent::CursorEntered { device_id } => pointers.enter(device_id),
                         WindowEvent::CursorLeft { device_id } => pointers.leave(device_id),
                         WindowEvent::CursorMoved {
@@ -203,8 +203,8 @@ impl FlutterWindow {
                             position,
                             ..
                         } => {
-                            let dpi = { context.lock().hidpi_factor() };
-                            let position = position.to_physical(dpi);
+                            //let dpi = { context.lock().hidpi_factor() };
+                            //let position = position.to_physical(dpi);
                             pointers.moved(device_id, position.into());
                         }
                         WindowEvent::MouseInput {
@@ -221,8 +221,8 @@ impl FlutterWindow {
                             let delta = match delta {
                                 MouseScrollDelta::LineDelta(_, _) => (0.0, 0.0), // TODO
                                 MouseScrollDelta::PixelDelta(position) => {
-                                    let dpi = { context.lock().hidpi_factor() };
-                                    let (dx, dy): (f64, f64) = position.to_physical(dpi).into();
+                                    let _ = { context.lock().hidpi_factor() };
+                                    let (dx, dy): (f64, f64) = position.into();
                                     (-dx, dy)
                                 }
                             };
@@ -234,9 +234,9 @@ impl FlutterWindow {
                             location,
                             ..
                         }) => {
-                            let dpi = { context.lock().hidpi_factor() };
-                            let position = location.to_physical(dpi);
-                            pointers.touch(device_id, phase, position.into());
+                            //let dpi = { context.lock().hidpi_factor() };
+                            //let position = location.to_physical(dpi);
+                            pointers.touch(device_id, phase, location.into());
                         }
                         WindowEvent::ReceivedCharacter(ch) => {
                             if !ch.is_control() {
@@ -253,8 +253,9 @@ impl FlutterWindow {
                                 KeyboardInput {
                                     state,
                                     virtual_keycode,
-                                    modifiers,
+                                    //modifiers,
                                     scancode,
+                                    ..
                                 },
                             ..
                         } => {
@@ -264,11 +265,11 @@ impl FlutterWindow {
                                 return;
                             };
 
-                            let shift = modifiers.shift as u32;
-                            let ctrl = modifiers.ctrl as u32;
-                            let alt = modifiers.alt as u32;
-                            let logo = modifiers.logo as u32;
-                            let raw_modifiers = shift | ctrl << 1 | alt << 2 | logo << 3;
+                            //let shift = modifiers.shift() as u32;
+                            //let ctrl = modifiers.ctrl() as u32;
+                            //let alt = modifiers.alt() as u32;
+                            //let logo = modifiers.logo() as u32;
+                            let raw_modifiers = 0; //shift | ctrl << 1 | alt << 2 | logo << 3;
 
                             match state {
                                 ElementState::Pressed => {
